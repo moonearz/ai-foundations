@@ -1,4 +1,3 @@
-import json
 import random
 from enum import Enum
 
@@ -43,9 +42,3 @@ class WordleGame:
     
     def is_over(self):
         return self.is_won() or len(self.guesses) >= 6
-
-
-
-
-
-

@@ -19,3 +19,6 @@ class Game(Protocol[State, Move, Player]):
 
     def current_player(self, state: State) -> Player:
         ...
+
+    def display(self, state: State) -> None:
+        ...

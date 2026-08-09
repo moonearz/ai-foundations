@@ -24,8 +24,11 @@ def get_feedback(guess: str, answer: str) -> list[TileColor]:
     return result
      
 class WordleGame:
-    def __init__(self, answers: list[str], possible_guesses: list[str]):
-        self.answer = random.choice(answers)
+    def __init__(self, answers: list[str], possible_guesses: list[str], answer=None):
+        if not answer:
+            self.answer = random.choice(answers)
+        else:
+            self.answer = answer
         self.possible_guesses = possible_guesses
         self.guesses = []
 

@@ -23,15 +23,19 @@ def convert_feedback(feedback: list[TileColor]) -> str:
     return "".join(chars)
 
 class Solver:
-    def __init__(self):
+    def __init__(self, use_cache=True):
         self.possible_answers = answers.copy()
         self.possible_guesses = list(set(guesses + answers))
-
-        with open("initial_rankings_all.json", "r") as f:
-            self.initial_rankings_all = [tuple(x) for x in json.load(f)]
+        if use_cache:
+            with open("initial_rankings_all.json", "r") as f:
+                self.initial_rankings_all = [tuple(x) for x in json.load(f)]
         
-        with open("initial_rankings_answers.json", "r") as f:
-            self.initial_rankings_answers = [tuple(x) for x in json.load(f)]
+            with open("initial_rankings_answers.json", "r") as f:
+                self.initial_rankings_answers = [tuple(x) for x in json.load(f)]
+        
+        else:
+            self.initial_rankings_answers = None
+            self.initial_rankings_all = None
 
     @property
     def remaining_answers(self):
@@ -65,7 +69,7 @@ class Solver:
         if len(self.possible_answers) == 1:
             return [(self.possible_answers[0], 0.0)]
         
-        if len(self.possible_answers) == len(answers):
+        if len(self.possible_answers) == len(answers) and self.initial_rankings_all:
             return self.initial_rankings_all[:n]
         
         scores = []
@@ -83,7 +87,7 @@ class Solver:
         if len(self.possible_answers) == 1:
             return [(self.possible_answers[0], 0.0)]
         
-        if len(self.possible_answers) == len(answers):
+        if len(self.possible_answers) == len(answers) and self.initial_rankings_answers:
             return self.initial_rankings_answers[:n]
         
         scores = []

@@ -11,22 +11,21 @@ with open("wordles.json", "r") as f:
 with open("nonwordles.json", "r") as f:
     guesses = json.load(f)
 
-NUM_ITERATIONS = 10000
+NUM_ITERATIONS = len(answers)
 
 turn_histogram = Counter()
 wins = 0
 total_turns = 0
-losing_words = []
+losing_words = set()
 
-for _ in range(NUM_ITERATIONS):
-    game = WordleGame(answers, list(set(guesses + answers)))
+for index, answer in enumerate(answers):
+    game = WordleGame(answers, list(set(guesses + answers)), answer)
     solver = Solver()
 
     turns = 0
 
     while turns < 6:
-        guess = solver.best_possible_answer()
-        # print(guess)
+        guess = solver.best_guess()
         turns += 1
 
         feedback = convert_feedback(game.make_guess(guess))
@@ -40,7 +39,12 @@ for _ in range(NUM_ITERATIONS):
         solver.update(guess, feedback)
     else:
         turn_histogram["Loss"] += 1
-        losing_words.append(game.answer)
+        losing_words.add(game.answer)
+        # print("#####")
+        # print(game.answer)
+        # print("#####")
+        # for guess in game.guesses:
+        #     print(guess[0])
         
     
 

@@ -1,8 +1,18 @@
+import pytest
+
 from game_search.tic_tac_toe import Player, State, Move, TicTacToe
 from game_search.minimax import minimax
+from game_search.alpha_beta import alpha_beta
 
 
-def test_minimax_takes_immediate_win():
+algorithms = [
+    minimax,
+    alpha_beta,
+]
+
+
+@pytest.mark.parametrize("algorithm", algorithms)
+def test_minimax_takes_immediate_win(algorithm):
     game = TicTacToe()
 
     state = State(
@@ -14,13 +24,14 @@ def test_minimax_takes_immediate_win():
         Player.X,
     )
 
-    move, value = minimax(game, state)
+    move, value = algorithm(game, state)
 
     assert move == Move(2)
     assert value == 1
 
 
-def test_minimax_blocks_immediate_loss():
+@pytest.mark.parametrize("algorithm", algorithms)
+def test_minimax_blocks_immediate_loss(algorithm):
     game = TicTacToe()
 
     state = State(
@@ -32,13 +43,14 @@ def test_minimax_blocks_immediate_loss():
         Player.X,
     )
 
-    move, value = minimax(game, state)
+    move, value = algorithm(game, state)
 
     assert move == Move(2)
     assert value == -1
 
 
-def test_minimax_takes_winning_move_over_blocking():
+@pytest.mark.parametrize("algorithm", algorithms)
+def test_minimax_takes_winning_move_over_blocking(algorithm):
     game = TicTacToe()
 
     state = State(
@@ -50,13 +62,14 @@ def test_minimax_takes_winning_move_over_blocking():
         Player.X,
     )
 
-    move, value = minimax(game, state)
+    move, value = algorithm(game, state)
 
     assert move == Move(2)
     assert value == 1
 
 
-def test_minimax_chooses_forced_loss():
+@pytest.mark.parametrize("algorithm", algorithms)
+def test_minimax_chooses_forced_loss(algorithm):
     game = TicTacToe()
 
     state = State(
@@ -68,13 +81,14 @@ def test_minimax_chooses_forced_loss():
         Player.O,
     )
 
-    move, value = minimax(game, state)
+    move, value = algorithm(game, state)
 
     assert move == Move(5)
     assert value == -1
 
 
-def test_minimax_returns_draw_when_no_winner():
+@pytest.mark.parametrize("algorithm", algorithms)
+def test_minimax_returns_draw_when_no_winner(algorithm):
     game = TicTacToe()
 
     state = State(
@@ -86,13 +100,14 @@ def test_minimax_returns_draw_when_no_winner():
         Player.X,
     )
 
-    move, value = minimax(game, state)
+    move, value = algorithm(game, state)
 
     assert move == Move(8)
     assert value == 0
 
 
-def test_minimax_terminal_win():
+@pytest.mark.parametrize("algorithm", algorithms)
+def test_minimax_terminal_win(algorithm):
     game = TicTacToe()
 
     state = State(
@@ -104,13 +119,14 @@ def test_minimax_terminal_win():
         Player.O,
     )
 
-    move, value = minimax(game, state)
+    move, value = algorithm(game, state)
 
     assert move is None
     assert value == -1
 
 
-def test_minimax_terminal_draw():
+@pytest.mark.parametrize("algorithm", algorithms)
+def test_minimax_terminal_draw(algorithm):
     game = TicTacToe()
 
     state = State(
@@ -122,13 +138,14 @@ def test_minimax_terminal_draw():
         Player.X,
     )
 
-    move, value = minimax(game, state)
+    move, value = algorithm(game, state)
 
     assert move is None
     assert value == 0
 
 
-def test_minimax_respects_maximizing_player():
+@pytest.mark.parametrize("algorithm", algorithms)
+def test_minimax_respects_maximizing_player(algorithm):
     game = TicTacToe()
 
     state = State(
@@ -140,7 +157,7 @@ def test_minimax_respects_maximizing_player():
         Player.X,
     )
 
-    move, value = minimax(game, state, Player.O)
+    move, value = algorithm(game, state, Player.O)
 
     assert move == Move(2)
     assert value == -1

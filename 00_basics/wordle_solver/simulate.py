@@ -1,14 +1,13 @@
-from collections import Counter
-import random
 import json
+from collections import Counter
 
 from game import WordleGame
 from solver import Solver, convert_feedback
 
-with open("wordles.json", "r") as f:
+with open("wordles.json") as f:
     answers = json.load(f)
 
-with open("nonwordles.json", "r") as f:
+with open("nonwordles.json") as f:
     guesses = json.load(f)
 
 NUM_ITERATIONS = len(answers)
@@ -18,7 +17,7 @@ wins = 0
 total_turns = 0
 losing_words = set()
 
-for index, answer in enumerate(answers):
+for _index, answer in enumerate(answers):
     game = WordleGame(answers, list(set(guesses + answers)), answer)
     solver = Solver()
 
@@ -45,8 +44,7 @@ for index, answer in enumerate(answers):
         # print("#####")
         # for guess in game.guesses:
         #     print(guess[0])
-        
-    
+
 
 print(f"Games played : {NUM_ITERATIONS}")
 print(f"Wins         : {wins}")

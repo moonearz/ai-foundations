@@ -1,4 +1,4 @@
-from game import get_feedback, TileColor, WordleGame
+from game import TileColor, WordleGame, get_feedback
 
 
 def test_feedback_all_green():
@@ -55,10 +55,7 @@ def test_feedback_mixed_colors():
 
 
 def test_game_valid_guess():
-    game = WordleGame(
-        answers=["crane"],
-        possible_guesses=["crane", "slate"]
-    )
+    game = WordleGame(answers=["crane"], possible_guesses=["crane", "slate"])
 
     assert game.is_valid_guess("crane")
     assert game.is_valid_guess("slate")
@@ -66,10 +63,7 @@ def test_game_valid_guess():
 
 
 def test_game_make_guess():
-    game = WordleGame(
-        answers=["crane"],
-        possible_guesses=["crane"]
-    )
+    game = WordleGame(answers=["crane"], possible_guesses=["crane"])
 
     feedback = game.make_guess("crane")
 
@@ -86,10 +80,7 @@ def test_game_make_guess():
 
 
 def test_game_win_condition():
-    game = WordleGame(
-        answers=["crane"],
-        possible_guesses=["crane"]
-    )
+    game = WordleGame(answers=["crane"], possible_guesses=["crane"])
 
     assert not game.is_won()
 
@@ -100,10 +91,7 @@ def test_game_win_condition():
 
 
 def test_game_loss_condition():
-    game = WordleGame(
-        answers=["crane"],
-        possible_guesses=["slate"]
-    )
+    game = WordleGame(answers=["crane"], possible_guesses=["slate"])
 
     for _ in range(6):
         game.make_guess("slate")

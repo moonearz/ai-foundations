@@ -1,10 +1,11 @@
 import random
 from enum import Enum
 
+
 class TileColor(Enum):
     GREEN = 1
     YELLOW = 2
-    GRAY = 3   
+    GRAY = 3
 
 
 def get_feedback(guess: str, answer: str) -> list[TileColor]:
@@ -22,7 +23,8 @@ def get_feedback(guess: str, answer: str) -> list[TileColor]:
             remaining[remaining.index(letter)] = None
 
     return result
-     
+
+
 class WordleGame:
     def __init__(self, answers: list[str], possible_guesses: list[str], answer=None):
         if not answer:
@@ -34,14 +36,14 @@ class WordleGame:
 
     def is_valid_guess(self, guess: str) -> bool:
         return guess in self.possible_guesses
-    
+
     def make_guess(self, guess: str) -> list[TileColor]:
         feedback = get_feedback(guess, self.answer)
         self.guesses.append((guess, feedback))
         return feedback
-    
+
     def is_won(self):
         return any(guess == self.answer for guess, _ in self.guesses)
-    
+
     def is_over(self):
         return self.is_won() or len(self.guesses) >= 6

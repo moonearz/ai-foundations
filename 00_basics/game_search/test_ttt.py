@@ -1,12 +1,12 @@
 import pytest
 
 from game_search.tic_tac_toe import (
+    Move,
     Player,
     State,
-    Move,
     TicTacToe,
-    winner,
     board_full,
+    winner,
 )
 
 
@@ -19,13 +19,13 @@ def test_initial_state(game):
     state = game.initial_state()
 
     assert state.board == (None,) * 9
-    assert state.player == Player.X
+    assert state.player == Player.EX
 
 
 def test_current_player(game):
-    state = State((None,) * 9, Player.O)
+    state = State((None,) * 9, Player.OH)
 
-    assert game.current_player(state) == Player.O
+    assert game.current_player(state) == Player.OH
 
 
 def test_legal_moves_empty_board(game):
@@ -47,11 +47,17 @@ def test_legal_moves_empty_board(game):
 def test_legal_moves_partially_filled(game):
     state = State(
         (
-            Player.X, None, Player.O,
-            None, Player.X, None,
-            Player.O, None, None,
+            Player.EX,
+            None,
+            Player.OH,
+            None,
+            Player.EX,
+            None,
+            Player.OH,
+            None,
+            None,
         ),
-        Player.X,
+        Player.EX,
     )
 
     assert game.legal_moves(state) == [
@@ -69,9 +75,15 @@ def test_make_move_places_player(game):
     new_state = game.make_move(state, Move(4))
 
     assert new_state.board == (
-        None, None, None,
-        None, Player.X, None,
-        None, None, None,
+        None,
+        None,
+        None,
+        None,
+        Player.EX,
+        None,
+        None,
+        None,
+        None,
     )
 
 
@@ -80,7 +92,7 @@ def test_make_move_switches_player(game):
 
     new_state = game.make_move(state, Move(4))
 
-    assert new_state.player == Player.O
+    assert new_state.player == Player.OH
 
 
 def test_make_move_does_not_modify_original_state(game):
@@ -89,7 +101,7 @@ def test_make_move_does_not_modify_original_state(game):
     game.make_move(state, Move(4))
 
     assert state.board == (None,) * 9
-    assert state.player == Player.X
+    assert state.player == Player.EX
 
 
 @pytest.mark.parametrize(
@@ -98,60 +110,94 @@ def test_make_move_does_not_modify_original_state(game):
         # Rows
         (
             (
-                Player.X, Player.X, Player.X,
-                None, None, None,
-                None, None, None,
+                Player.EX,
+                Player.EX,
+                Player.EX,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
             ),
-            Player.X,
+            Player.EX,
         ),
         (
             (
-                None, None, None,
-                Player.O, Player.O, Player.O,
-                None, None, None,
+                None,
+                None,
+                None,
+                Player.OH,
+                Player.OH,
+                Player.OH,
+                None,
+                None,
+                None,
             ),
-            Player.O,
+            Player.OH,
         ),
-
         # Columns
         (
             (
-                Player.X, None, None,
-                Player.X, None, None,
-                Player.X, None, None,
+                Player.EX,
+                None,
+                None,
+                Player.EX,
+                None,
+                None,
+                Player.EX,
+                None,
+                None,
             ),
-            Player.X,
+            Player.EX,
         ),
         (
             (
-                None, Player.O, None,
-                None, Player.O, None,
-                None, Player.O, None,
+                None,
+                Player.OH,
+                None,
+                None,
+                Player.OH,
+                None,
+                None,
+                Player.OH,
+                None,
             ),
-            Player.O,
+            Player.OH,
         ),
-
         # Diagonals
         (
             (
-                Player.X, None, None,
-                None, Player.X, None,
-                None, None, Player.X,
+                Player.EX,
+                None,
+                None,
+                None,
+                Player.EX,
+                None,
+                None,
+                None,
+                Player.EX,
             ),
-            Player.X,
+            Player.EX,
         ),
         (
             (
-                None, None, Player.O,
-                None, Player.O, None,
-                Player.O, None, None,
+                None,
+                None,
+                Player.OH,
+                None,
+                Player.OH,
+                None,
+                Player.OH,
+                None,
+                None,
             ),
-            Player.O,
+            Player.OH,
         ),
     ],
 )
 def test_winner(board, expected_winner):
-    state = State(board, Player.X)
+    state = State(board, Player.EX)
 
     assert winner(state) == expected_winner
 
@@ -159,18 +205,24 @@ def test_winner(board, expected_winner):
 def test_winner_no_winner():
     state = State(
         (
-            Player.X, Player.O, None,
-            None, Player.X, None,
-            None, None, Player.O,
+            Player.EX,
+            Player.OH,
+            None,
+            None,
+            Player.EX,
+            None,
+            None,
+            None,
+            Player.OH,
         ),
-        Player.X,
+        Player.EX,
     )
 
     assert winner(state) is None
 
 
 def test_winner_empty_board():
-    state = State((None,) * 9, Player.X)
+    state = State((None,) * 9, Player.EX)
 
     assert winner(state) is None
 
@@ -178,11 +230,17 @@ def test_winner_empty_board():
 def test_board_full():
     state = State(
         (
-            Player.X, Player.O, Player.X,
-            Player.O, Player.X, Player.O,
-            Player.O, Player.X, Player.O,
+            Player.EX,
+            Player.OH,
+            Player.EX,
+            Player.OH,
+            Player.EX,
+            Player.OH,
+            Player.OH,
+            Player.EX,
+            Player.OH,
         ),
-        Player.X,
+        Player.EX,
     )
 
     assert board_full(state)
@@ -191,11 +249,17 @@ def test_board_full():
 def test_board_not_full():
     state = State(
         (
-            Player.X, Player.O, Player.X,
-            Player.O, None, Player.O,
-            Player.O, Player.X, Player.O,
+            Player.EX,
+            Player.OH,
+            Player.EX,
+            Player.OH,
+            None,
+            Player.OH,
+            Player.OH,
+            Player.EX,
+            Player.OH,
         ),
-        Player.X,
+        Player.EX,
     )
 
     assert not board_full(state)
@@ -204,11 +268,17 @@ def test_board_not_full():
 def test_terminal_when_x_wins(game):
     state = State(
         (
-            Player.X, Player.X, Player.X,
-            Player.O, Player.O, None,
-            None, None, None,
+            Player.EX,
+            Player.EX,
+            Player.EX,
+            Player.OH,
+            Player.OH,
+            None,
+            None,
+            None,
+            None,
         ),
-        Player.O,
+        Player.OH,
     )
 
     assert game.is_terminal(state)
@@ -217,11 +287,17 @@ def test_terminal_when_x_wins(game):
 def test_terminal_when_board_full(game):
     state = State(
         (
-            Player.X, Player.O, Player.X,
-            Player.O, Player.X, Player.O,
-            Player.O, Player.X, Player.O,
+            Player.EX,
+            Player.OH,
+            Player.EX,
+            Player.OH,
+            Player.EX,
+            Player.OH,
+            Player.OH,
+            Player.EX,
+            Player.OH,
         ),
-        Player.X,
+        Player.EX,
     )
 
     assert game.is_terminal(state)
@@ -230,11 +306,17 @@ def test_terminal_when_board_full(game):
 def test_not_terminal(game):
     state = State(
         (
-            Player.X, Player.O, None,
-            None, Player.X, None,
-            None, None, Player.O,
+            Player.EX,
+            Player.OH,
+            None,
+            None,
+            Player.EX,
+            None,
+            None,
+            None,
+            Player.OH,
         ),
-        Player.X,
+        Player.EX,
     )
 
     assert not game.is_terminal(state)
@@ -243,37 +325,55 @@ def test_not_terminal(game):
 def test_evaluate_x_win_for_x(game):
     state = State(
         (
-            Player.X, Player.X, Player.X,
-            Player.O, Player.O, None,
-            None, None, None,
+            Player.EX,
+            Player.EX,
+            Player.EX,
+            Player.OH,
+            Player.OH,
+            None,
+            None,
+            None,
+            None,
         ),
-        Player.O,
+        Player.OH,
     )
 
-    assert game.evaluate(state, Player.X) == 1
+    assert game.evaluate(state, Player.EX) == 1
 
 
 def test_evaluate_x_win_for_o(game):
     state = State(
         (
-            Player.X, Player.X, Player.X,
-            Player.O, Player.O, None,
-            None, None, None,
+            Player.EX,
+            Player.EX,
+            Player.EX,
+            Player.OH,
+            Player.OH,
+            None,
+            None,
+            None,
+            None,
         ),
-        Player.O,
+        Player.OH,
     )
 
-    assert game.evaluate(state, Player.O) == -1
+    assert game.evaluate(state, Player.OH) == -1
 
 
 def test_evaluate_draw(game):
     state = State(
         (
-            Player.X, Player.O, Player.X,
-            Player.O, Player.X, Player.O,
-            Player.O, Player.X, Player.O,
+            Player.EX,
+            Player.OH,
+            Player.EX,
+            Player.OH,
+            Player.EX,
+            Player.OH,
+            Player.OH,
+            Player.EX,
+            Player.OH,
         ),
-        Player.X,
+        Player.EX,
     )
 
-    assert game.evaluate(state, Player.X) == 0
+    assert game.evaluate(state, Player.EX) == 0

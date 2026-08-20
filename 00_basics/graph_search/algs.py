@@ -1,5 +1,7 @@
-import networkx as nx
 from collections import deque
+
+import networkx as nx
+
 
 def depth_first_search(graph: nx.Graph, start: str, goal: str) -> list[str] | None:
     if start not in graph or goal not in graph:
@@ -14,23 +16,20 @@ def depth_first_search(graph: nx.Graph, start: str, goal: str) -> list[str] | No
         current_node = current_path[-1]
         if current_node == goal:
             return current_path
-            
+
         for node in graph.neighbors(current_node):
             if node not in visited_set:
                 visited_set.add(node)
                 new_path = current_path + [node]
                 stack.append(new_path)
 
-
     return None
-
-
 
 
 def breadth_first_search(graph: nx.Graph, start: str, goal: str) -> list[str] | None:
     if start not in graph or goal not in graph:
         return None
-    
+
     queue = deque()
     visited_set = set()
 
@@ -48,13 +47,14 @@ def breadth_first_search(graph: nx.Graph, start: str, goal: str) -> list[str] | 
                 new_path = current_path + [node]
                 queue.append(new_path)
                 visited_set.add(node)
-    
+
     return None
+
 
 def branch_and_bound(graph: nx.Graph, start: str, goal: str) -> list[str] | None:
     if start not in graph or goal not in graph:
         return None
-    
+
     queue = deque()
     best_path = None
     best_path_length = float("inf")
@@ -76,6 +76,4 @@ def branch_and_bound(graph: nx.Graph, start: str, goal: str) -> list[str] | None
                     new_path = current_path + [node]
                     queue.append(new_path)
 
-    
     return best_path
-

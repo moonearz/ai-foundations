@@ -1,14 +1,8 @@
 import networkx as nx
 import pytest
+from algs import branch_and_bound, breadth_first_search, depth_first_search
 
-from algs import depth_first_search, breadth_first_search, branch_and_bound
-
-
-search_algorithms = [
-    depth_first_search,
-    breadth_first_search,
-    branch_and_bound
-]
+search_algorithms = [depth_first_search, breadth_first_search, branch_and_bound]
 
 
 @pytest.mark.parametrize("search", search_algorithms)
@@ -24,11 +18,13 @@ def test_direct_edge(search):
 @pytest.mark.parametrize("search", search_algorithms)
 def test_simple_path(search):
     graph = nx.Graph()
-    graph.add_edges_from([
-        ("A", "B"),
-        ("B", "C"),
-        ("C", "D"),
-    ])
+    graph.add_edges_from(
+        [
+            ("A", "B"),
+            ("B", "C"),
+            ("C", "D"),
+        ]
+    )
 
     path = search(graph, "A", "D")
 
@@ -40,14 +36,16 @@ def test_simple_path(search):
 @pytest.mark.parametrize("search", search_algorithms)
 def test_branching_graph(search):
     graph = nx.Graph()
-    graph.add_edges_from([
-        ("A", "B"),
-        ("A", "C"),
-        ("B", "D"),
-        ("C", "E"),
-        ("D", "F"),
-        ("E", "F"),
-    ])
+    graph.add_edges_from(
+        [
+            ("A", "B"),
+            ("A", "C"),
+            ("B", "D"),
+            ("C", "E"),
+            ("D", "F"),
+            ("E", "F"),
+        ]
+    )
 
     path = search(graph, "A", "F")
 
@@ -59,10 +57,12 @@ def test_branching_graph(search):
 @pytest.mark.parametrize("search", search_algorithms)
 def test_no_path(search):
     graph = nx.Graph()
-    graph.add_edges_from([
-        ("A", "B"),
-        ("C", "D"),
-    ])
+    graph.add_edges_from(
+        [
+            ("A", "B"),
+            ("C", "D"),
+        ]
+    )
 
     path = search(graph, "A", "D")
 
@@ -72,10 +72,12 @@ def test_no_path(search):
 @pytest.mark.parametrize("search", search_algorithms)
 def test_start_equals_goal(search):
     graph = nx.Graph()
-    graph.add_edges_from([
-        ("A", "B"),
-        ("B", "C"),
-    ])
+    graph.add_edges_from(
+        [
+            ("A", "B"),
+            ("B", "C"),
+        ]
+    )
 
     path = search(graph, "A", "A")
 
@@ -94,11 +96,13 @@ def test_empty_graph(search):
 @pytest.mark.parametrize("search", search_algorithms)
 def test_cycle(search):
     graph = nx.Graph()
-    graph.add_edges_from([
-        ("A", "B"),
-        ("B", "C"),
-        ("C", "A"),
-    ])
+    graph.add_edges_from(
+        [
+            ("A", "B"),
+            ("B", "C"),
+            ("C", "A"),
+        ]
+    )
 
     path = search(graph, "A", "C")
 
@@ -108,7 +112,4 @@ def test_cycle(search):
 
 
 def is_valid_path(graph: nx.Graph, path: list) -> bool:
-    return all(
-        graph.has_edge(path[i], path[i + 1])
-        for i in range(len(path) - 1)
-    )
+    return all(graph.has_edge(path[i], path[i + 1]) for i in range(len(path) - 1))

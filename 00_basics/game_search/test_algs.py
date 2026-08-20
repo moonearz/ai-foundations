@@ -1,9 +1,8 @@
 import pytest
 
-from game_search.tic_tac_toe import Player, State, Move, TicTacToe
-from game_search.minimax import minimax
 from game_search.alpha_beta import alpha_beta
-
+from game_search.minimax import minimax
+from game_search.tic_tac_toe import Move, Player, State, TicTacToe
 
 algorithms = [
     minimax,
@@ -17,11 +16,17 @@ def test_minimax_takes_immediate_win(algorithm):
 
     state = State(
         (
-            Player.X, Player.X, None,
-            Player.O, Player.O, None,
-            None, None, None,
+            Player.EX,
+            Player.EX,
+            None,
+            Player.OH,
+            Player.OH,
+            None,
+            None,
+            None,
+            None,
         ),
-        Player.X,
+        Player.EX,
     )
 
     move, value = algorithm(game, state)
@@ -36,11 +41,17 @@ def test_minimax_blocks_immediate_loss(algorithm):
 
     state = State(
         (
-            Player.O, Player.O, None,
-            Player.X, None, None,
-            None, None, None,
+            Player.OH,
+            Player.OH,
+            None,
+            Player.EX,
+            None,
+            None,
+            None,
+            None,
+            None,
         ),
-        Player.X,
+        Player.EX,
     )
 
     move, value = algorithm(game, state)
@@ -55,11 +66,17 @@ def test_minimax_takes_winning_move_over_blocking(algorithm):
 
     state = State(
         (
-            Player.X, Player.X, None,
-            Player.O, None, None,
-            Player.O, None, None,
+            Player.EX,
+            Player.EX,
+            None,
+            Player.OH,
+            None,
+            None,
+            Player.OH,
+            None,
+            None,
         ),
-        Player.X,
+        Player.EX,
     )
 
     move, value = algorithm(game, state)
@@ -74,11 +91,17 @@ def test_minimax_chooses_forced_loss(algorithm):
 
     state = State(
         (
-            Player.X, Player.O, Player.X,
-            Player.O, Player.X, None,
-            None, None, None,
+            Player.EX,
+            Player.OH,
+            Player.EX,
+            Player.OH,
+            Player.EX,
+            None,
+            None,
+            None,
+            None,
         ),
-        Player.O,
+        Player.OH,
     )
 
     move, value = algorithm(game, state)
@@ -93,11 +116,17 @@ def test_minimax_returns_draw_when_no_winner(algorithm):
 
     state = State(
         (
-            Player.X, Player.O, Player.X,
-            Player.X, Player.O, Player.O,
-            Player.O, Player.X, None,
+            Player.EX,
+            Player.OH,
+            Player.EX,
+            Player.EX,
+            Player.OH,
+            Player.OH,
+            Player.OH,
+            Player.EX,
+            None,
         ),
-        Player.X,
+        Player.EX,
     )
 
     move, value = algorithm(game, state)
@@ -112,11 +141,17 @@ def test_minimax_terminal_win(algorithm):
 
     state = State(
         (
-            Player.X, Player.X, Player.X,
-            Player.O, Player.O, None,
-            None, None, None,
+            Player.EX,
+            Player.EX,
+            Player.EX,
+            Player.OH,
+            Player.OH,
+            None,
+            None,
+            None,
+            None,
         ),
-        Player.O,
+        Player.OH,
     )
 
     move, value = algorithm(game, state)
@@ -131,11 +166,17 @@ def test_minimax_terminal_draw(algorithm):
 
     state = State(
         (
-            Player.X, Player.O, Player.X,
-            Player.X, Player.O, Player.O,
-            Player.O, Player.X, Player.X,
+            Player.EX,
+            Player.OH,
+            Player.EX,
+            Player.EX,
+            Player.OH,
+            Player.OH,
+            Player.OH,
+            Player.EX,
+            Player.EX,
         ),
-        Player.X,
+        Player.EX,
     )
 
     move, value = algorithm(game, state)
@@ -150,14 +191,20 @@ def test_minimax_respects_maximizing_player(algorithm):
 
     state = State(
         (
-            Player.X, Player.X, None,
-            Player.O, Player.O, None,
-            None, None, None,
+            Player.EX,
+            Player.EX,
+            None,
+            Player.OH,
+            Player.OH,
+            None,
+            None,
+            None,
+            None,
         ),
-        Player.X,
+        Player.EX,
     )
 
-    move, value = algorithm(game, state, Player.O)
+    move, value = algorithm(game, state, Player.OH)
 
     assert move == Move(2)
     assert value == -1

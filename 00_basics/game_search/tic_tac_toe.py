@@ -1,3 +1,6 @@
+from dataclasses import dataclass
+from enum import Enum
+
 # 0 | 1 | 2
 # ---------
 # 3 | 4 | 5
@@ -15,13 +18,10 @@ WINNING_LINES = (
     (2, 4, 6),
 )
 
-from dataclasses import dataclass
-from enum import Enum
-
 
 class Player(Enum):
-    X = "X"
-    O = "O"
+    EX = "X"
+    OH = "O"
 
 
 @dataclass(frozen=True)
@@ -34,6 +34,7 @@ class State:
 class Move:
     position: int
 
+
 def winner(state: State) -> Player | None:
     for line in WINNING_LINES:
         first = state.board[line[0]]
@@ -43,13 +44,15 @@ def winner(state: State) -> Player | None:
 
     return None
 
+
 def board_full(state: State) -> bool:
     return not any(value is None for value in state.board)
+
 
 class TicTacToe:
     def initial_state(self) -> State:
         initial_board = (None,) * 9
-        initial_player = Player.X
+        initial_player = Player.EX
         return State(initial_board, initial_player)
 
     def current_player(self, state: State) -> Player:
@@ -60,13 +63,13 @@ class TicTacToe:
         for index, val in enumerate(state.board):
             if val is None:
                 valid_moves.append(Move(index))
-        
+
         return valid_moves
 
     def make_move(self, state: State, move: Move) -> State:
         tokens = list(state.board)
         tokens[move.position] = state.player
-        new_player = Player.O if state.player == Player.X else Player.X
+        new_player = Player.OH if state.player == Player.EX else Player.EX
         return State(tuple(tokens), new_player)
 
     def is_terminal(self, state: State) -> bool:
@@ -79,17 +82,19 @@ class TicTacToe:
         elif winning_player == player:
             return 1
         else:
-            return -1      
+            return -1
 
     def display(self, state: State) -> None:
         board = state.board
 
         for row in range(3):
             start = row * 3
-            print(" | ".join(
-                " " if board[i] is None else board[i].value
-                for i in range(start, start + 3)
-            ))
+            print(
+                " | ".join(
+                    " " if board[i] is None else board[i].value
+                    for i in range(start, start + 3)
+                )
+            )
 
             if row < 2:
                 print("---------")

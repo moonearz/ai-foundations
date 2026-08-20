@@ -1,16 +1,17 @@
 import json
-from game import WordleGame
+
 from display import (
+    create_keyboard,
     print_feedback,
     print_keyboard,
-    create_keyboard,
     update_keyboard,
 )
+from game import WordleGame
 
-with open("wordles.json", "r") as f:
+with open("wordles.json") as f:
     answers = json.load(f)
 
-with open("nonwordles.json", "r") as f:
+with open("nonwordles.json") as f:
     possible_guesses = json.load(f)
 
 game = WordleGame(answers, possible_guesses + answers)

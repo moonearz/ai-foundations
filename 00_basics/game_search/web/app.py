@@ -1,10 +1,12 @@
+import os
+
 from flask import Flask, redirect, render_template, request, session, url_for
 
 from game_search.minimax import minimax
 from game_search.tic_tac_toe import Player, State, TicTacToe, winner
 
 app = Flask(__name__)
-app.secret_key = "development-only-secret"
+app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
 
 game = TicTacToe()
 
